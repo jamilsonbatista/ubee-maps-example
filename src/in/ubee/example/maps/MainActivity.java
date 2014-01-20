@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
 
@@ -53,32 +52,44 @@ public class MainActivity extends Activity implements OnMapViewLoadListener {
 				e.printStackTrace();
 			}
 			
-			
 			return null;
 		}
 		
 		@Override
 		protected void onPostExecute(Retail retail) {
 			super.onPostExecute(retail);
-			mIndoorMapView.setRetail(retail, MainActivity.this);
+			mIndoorMapView.setRetailById("513df2911613e75c53000014", new OnMapViewLoadListener() {
+				
+				@Override
+				public void onRetailMapLoadFinished(RetailMap retailMap) { }
+				
+				@Override
+				public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
+					mIndoorMapView.setNextFloor();
+				}
+				
+				@Override
+				public void onLoadError(UbeeAPIException e) {
+					e.printStackTrace();
+					
+				}
+			});
 		}
 	}
 
 
 	@Override
 	public void onLoadError(UbeeAPIException e) {
-		e.printStackTrace();
+		
 		
 	}
 
 	@Override
 	public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
-		Log.d("TESTANDO", "RETAIL LOAD FINISHED " + retail.getId());
-		mIndoorMapView.setNextFloor();
+
 	}
 
 	@Override
 	public void onRetailMapLoadFinished(RetailMap retailMap) {
-		Log.d("TESTANDO", "RETAIL MAP LOAD FINISHED " + retailMap.getFloor());
 	}
 }
