@@ -177,7 +177,7 @@ Ubee.setLogsVisible(true)
 
   [android_support_library]: http://developer.android.com/tools/support-library/setup.html
   [v4_download_link]: https://s3.amazonaws.com/mobile-api/android-support-v4.jar
-  [thin_jar]: https://s3.amazonaws.com/mobile-api/0.1.3/Maps/ubee-api-0.1.3.jar
+  [thin_jar]: https://s3.amazonaws.com/mobile-api/0.2/Maps/ubee-api-0.2.jar
   [maps_demo_project]: https://github.com/ubee/ubee-maps-example
   [create_app]: http://maps.ubee.in/oauth/applications/new
 
