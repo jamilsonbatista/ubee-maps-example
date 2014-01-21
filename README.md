@@ -65,7 +65,7 @@ Usage Indoor Location
 
 ```java
 private OnMapsLocationListener mLocationListener = new OnMapsLocationListener() {
-	
+    
 	@Override
 	public void onLocationChanged(Location location) {
 	}
@@ -119,29 +119,34 @@ public void setFloor(int floor);
 ```
 
 ###Example
+
 ```java
-@Override
-protected void onCreate() {
-    super.onResume();
-    IndoorMapView indoorMapView = new IndoorMapView(this);
-        mIndoorMapView.setRetailById("513df2911613e75c53000014", new OnMapViewLoadListener() {
+
+public class MyClass extends Activity {
+    private IndoorMapView mIndoorMapView;
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mIndoorMapView = new IndoorMapView(this);
+        mIndoorMapView.setRetailById("your_retail_id", new OnMapViewLoadListener() {
         
-        		@Override
-				public void onRetailMapLoadFinished(RetailMap retailMap) {
-                }
+            		@Override
+		    		public void onRetailMapLoadFinished(RetailMap retailMap) {
+                    }
 				
-				@Override
-				public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
-                    mIndoorMapView.setNextFloor();
-				}
+			    	@Override
+			    	public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
+                        mIndoorMapView.setNextFloor();
+			    	}
 				
-				@Override
-				public void onLoadError(UbeeAPIException e) {
-					e.printStackTrace();
-					
-				}
-			});
-		}
+			    	@Override
+			    	public void onLoadError(UbeeAPIException e) {
+			    		e.printStackTrace();
+			    	}
+	        });
+        this.setContentView(mIndoorMapView);
+	}
 }
 ```
 ####You can also validate if there is a floor to be shown on the next/previous methods.
@@ -154,20 +159,32 @@ public boolean hasPreviousFloor();
 public void setLocationPoint(Location newLocationPoint);
 ```
 
-####Usage Example
+####Usage
+Steps:
+- Create your IndoorMapView.
+- Create the OnMapsLocationListener
+- Pass the callback of OnLocationChanged(Location location) to the IndoorMapView.
+- Register the LocationCallback when you want to start tracking
+- Unregister the LocationCallback when you want to stop tracking
+
+####Example
 ```java
-IndoorMapView indoorMapView = [...];
-Ubee.registerLocationCallback(context, new OnMapsLocationListener() {
+IndoorMapView mIndoorMapView = [...];
+OnMapsLocationListener mLocationListener =  new OnMapsLocationListener() {
 
     @Override
     public void onLocationChanged(Location location) {
-        indoorMapView.setLocationPoint(location);
+	    mIndoorMapView.setLocationPoint(location);	
     }
-    
-    @Override
-    public void onError(LocationError error) {
-    }
-});
+
+	@Override
+		public void onError(LocationError locationError) {
+	}
+};
+Ubee.registerLocationCallback(context, mLocationListener);
+[...]
+Ubee.unregisterLocationCallback(context, mLocationListener);
+
 ```
 ---
 ###Enable Logs
@@ -180,6 +197,7 @@ Ubee.setLogsVisible(true)
   [thin_jar]: https://s3.amazonaws.com/mobile-api/0.2/Maps/ubee-api-0.2.jar
   [maps_demo_project]: https://github.com/ubee/ubee-maps-example
   [create_app]: http://maps.ubee.in/oauth/applications/new
+
 
 
 
