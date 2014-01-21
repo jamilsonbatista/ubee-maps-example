@@ -4,5 +4,7 @@
     <string name="app_name">UbeeMapsExampleProject</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="next">Next floor</string>
+    <string name="previous">Previous floor</string>
 
 </resources>

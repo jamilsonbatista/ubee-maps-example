@@ -14,14 +14,9 @@ public class ExampleApplication extends Application {
     private void ubeeSetup() {
     	Ubee.setLogsVisible(true);
         Ubee.init(this);
-        String mapsKey;
-        String mapsSecret;
-
-        mapsKey = "3a8b1958d98851a2a8513457ee13ecb1ebe5c5ff3d2fd9e1bd7a33ccccf0a75d";
-        mapsSecret = "0a588131c1247e03339787d0781a79f05a6332b6b2cfa4062018ccdc11e2a493";
-        
+        String mapsKey = "07be1c1963a2d5aab12dfb805a113bf28243a9c4c82136273af6b653ed989917";
+        String mapsSecret = "5cf1baf2be27baad69d824de2a4d0af187db2c0065e0cf8766f351a880ef63e5";
         Ubee.setMapsApp(mapsKey, mapsSecret);
-        Ubee.setCacheSizeLimit(10485760L); //10MB
-
+        Ubee.setCacheSizeLimit(10485760L);
     }
 }

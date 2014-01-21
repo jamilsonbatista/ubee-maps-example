@@ -2,6 +2,9 @@ package in.ubee.example.maps;
 
 import in.ubee.api.Ubee;
 import in.ubee.api.exception.UbeeAPIException;
+import in.ubee.api.location.LocationError;
+import in.ubee.api.maps.OnMapsLocationListener;
+import in.ubee.api.models.Location;
 import in.ubee.api.ui.listener.OnMapViewLoadListener;
 import in.ubee.api.ui.views.IndoorMapView;
 import in.ubee.models.Retail;
@@ -15,30 +18,67 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
-public class MainActivity extends Activity implements OnMapViewLoadListener {
+public class MainActivity extends Activity implements OnClickListener {
 	private IndoorMapView mIndoorMapView;
+	private ImageButton mNextFloorButton;
+	private ImageButton mPreviousFloorButton;
+
+	private OnMapsLocationListener mLocationListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ViewGroup mapContainer = (ViewGroup) this.findViewById(R.id.map_container);
+		mPreviousFloorButton = (ImageButton) this.findViewById(R.id.previous_floor);
+		mNextFloorButton = (ImageButton) this.findViewById(R.id.next_floor);
 		mIndoorMapView = new IndoorMapView(this);
 		mapContainer.addView(mIndoorMapView);
+		mNextFloorButton.setEnabled(mIndoorMapView.hasNextFloor());
+		mPreviousFloorButton.setEnabled(mIndoorMapView.hasPreviousFloor());
+
+		mLocationListener =  new OnMapsLocationListener() {
+
+			@Override
+			public void onLocationChanged(Location location) {
+				mIndoorMapView.setLocationPoint(location);	
+			}
+
+			@Override
+			public void onError(LocationError locationError) {
+			}
+		};
+
 		new LoadMapAsyncTask().execute();
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+	protected void onStart() {
+		super.onStart();
+		Ubee.registerLocationCallback(this, mLocationListener);
+	};
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Ubee.registerLocationCallback(this, mLocationListener);
 	}
 	
-	
-	class LoadMapAsyncTask extends AsyncTask<Void, Void, Retail>{
+	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.next_floor) {
+			mIndoorMapView.setNextFloor();
+		} else if (v.getId() == R.id.previous_floor) {
+			mIndoorMapView.setPreviousFloor();
+		}
+	}
+
+	class LoadMapAsyncTask extends AsyncTask<Void, Void, Retail> {
 
 		@Override
 		protected Retail doInBackground(Void... params) {
@@ -51,45 +91,32 @@ public class MainActivity extends Activity implements OnMapViewLoadListener {
 			} catch (InvalidMappingException e) {
 				e.printStackTrace();
 			}
-			
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Retail retail) {
 			super.onPostExecute(retail);
-			mIndoorMapView.setRetailById("513df2911613e75c53000014", new OnMapViewLoadListener() {
-				
+			mIndoorMapView.setRetail(retail, new OnMapViewLoadListener() {
+
 				@Override
-				public void onRetailMapLoadFinished(RetailMap retailMap) { }
-				
+				public void onRetailMapLoadFinished(RetailMap retailMap) { 
+					mNextFloorButton.setEnabled(mIndoorMapView.hasNextFloor());
+					mPreviousFloorButton.setEnabled(mIndoorMapView.hasPreviousFloor());
+				}
+
 				@Override
 				public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
 					mIndoorMapView.setNextFloor();
+					mPreviousFloorButton.setOnClickListener(MainActivity.this);
+					mNextFloorButton.setOnClickListener(MainActivity.this);
 				}
-				
+
 				@Override
 				public void onLoadError(UbeeAPIException e) {
 					e.printStackTrace();
-					
 				}
 			});
 		}
-	}
-
-
-	@Override
-	public void onLoadError(UbeeAPIException e) {
-		
-		
-	}
-
-	@Override
-	public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
-
-	}
-
-	@Override
-	public void onRetailMapLoadFinished(RetailMap retailMap) {
 	}
 }
