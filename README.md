@@ -52,6 +52,7 @@ You will need to use your application id (app_id) and secret (app_secret) that y
 Just add the lines below in your **Application** onCreate method.
 **Warning** Do not put it in your activity for the current version.
 ```java
+Ubee.setLogsVisible(true);
 Ubee.init(this.getApplicationContext());
 String appId = "your_app_id";
 String appSecret = "your_app_secret";
@@ -187,9 +188,9 @@ Ubee.unregisterLocationCallback(context, mLocationListener);
 
 ```
 ---
-###Enable Logs
+###Disable Logs
 ```java
-Ubee.setLogsVisible(true)
+Ubee.setLogsVisible(false);
 ```
 
   [android_support_library]: http://developer.android.com/tools/support-library/setup.html
