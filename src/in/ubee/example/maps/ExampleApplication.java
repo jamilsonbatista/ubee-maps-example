@@ -1,6 +1,7 @@
 package in.ubee.example.maps;
 
 import in.ubee.api.Ubee;
+import in.ubee.api.UbeeOptions;
 import android.app.Application;
 
 public class ExampleApplication extends Application {
@@ -12,10 +13,15 @@ public class ExampleApplication extends Application {
     }
 
     private void ubeeSetup() {
-        Ubee.init(this);
-        String mapsKey = "07be1c1963a2d5aab12dfb805a113bf28243a9c4c82136273af6b653ed989917";
-        String mapsSecret = "5cf1baf2be27baad69d824de2a4d0af187db2c0065e0cf8766f351a880ef63e5";
-        Ubee.setMapsApp(mapsKey, mapsSecret);
-        Ubee.setCacheSizeLimit(10485760L);
+    	
+    	UbeeOptions options = UbeeOptions.getInstance(this);
+
+		options.setMapsKey(
+				"4dbf36ace426cec4353900630b06c572d7b416bd23f7ba4aae0f2842e8ea1e38",
+				"795931ff8c1344c2656416f157f99c858391fe8d003bf1e994f4176537f79af9");
+
+		options.setLogEnabled(true);
+
+		Ubee.init(this, options);
     }
 }

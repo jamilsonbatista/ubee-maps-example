@@ -1,12 +1,12 @@
 package in.ubee.example.maps;
 
+import in.ubee.android.view.IndoorMapView;
 import in.ubee.api.Ubee;
 import in.ubee.api.exception.UbeeAPIException;
 import in.ubee.api.location.LocationError;
 import in.ubee.api.maps.OnMapsLocationListener;
 import in.ubee.api.models.Location;
 import in.ubee.api.ui.listener.OnMapViewLoadListener;
-import in.ubee.api.ui.views.IndoorMapView;
 import in.ubee.models.Retail;
 import in.ubee.models.RetailMap;
 import in.ubee.models.exceptions.InvalidMappingException;
@@ -42,15 +42,17 @@ public class MainActivity extends Activity implements OnClickListener {
 		mNextFloorButton.setEnabled(mIndoorMapView.hasNextFloor());
 		mPreviousFloorButton.setEnabled(mIndoorMapView.hasPreviousFloor());
 
-		mLocationListener =  new OnMapsLocationListener() {
-
+		mLocationListener = new OnMapsLocationListener() {
+			
 			@Override
 			public void onLocationChanged(Location location) {
-				mIndoorMapView.setLocationPoint(location);	
+				mIndoorMapView.setUserLocation(location);	
 			}
-
+			
 			@Override
 			public void onError(LocationError locationError) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 
@@ -83,7 +85,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected Retail doInBackground(Void... params) {
 			try {
-				JSONObject retailsAsJson = Ubee.requestRetails();
+				JSONObject retailsAsJson = Ubee.requestRetails(MainActivity.this);
 				List<Retail> retails = Retail.parseListFromJSON(retailsAsJson);
 				return retails.get(0);
 			} catch (UbeeAPIException e) {
@@ -97,13 +99,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		protected void onPostExecute(Retail retail) {
 			super.onPostExecute(retail);
+			
 			mIndoorMapView.setRetail(retail, new OnMapViewLoadListener() {
-
-				@Override
-				public void onRetailMapLoadFinished(RetailMap retailMap) { 
-					mNextFloorButton.setEnabled(mIndoorMapView.hasNextFloor());
-					mPreviousFloorButton.setEnabled(mIndoorMapView.hasPreviousFloor());
-				}
 
 				@Override
 				public void onRetailLoadFinished(Retail retail, List<RetailMap> retailMaps) {
@@ -111,6 +108,13 @@ public class MainActivity extends Activity implements OnClickListener {
 					mPreviousFloorButton.setOnClickListener(MainActivity.this);
 					mNextFloorButton.setOnClickListener(MainActivity.this);
 				}
+				
+				@Override
+				public void onRetailMapLoadFinished(RetailMap retailMap) { 
+					mNextFloorButton.setEnabled(mIndoorMapView.hasNextFloor());
+					mPreviousFloorButton.setEnabled(mIndoorMapView.hasPreviousFloor());
+				}
+
 
 				@Override
 				public void onLoadError(UbeeAPIException e) {
