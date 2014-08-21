@@ -1,63 +1,88 @@
 Ubee Maps
 ========
-For Android SDK 8+
+For Android SDK 14+
 
-###Getting Started - Version 0.1.1
+1. Register your App
+---
+Create your application [**here**] [create_app] (You will need to have an account to do that).
 
- - Create your application [**here**] [create_app]
- - Download the jar [**here**] [thin_jar]
- - View the example project [**here**] [maps_demo_project]
- - Javadoc [**here**] [javadocs]
+2. Download SDK and Dependencies
+---
+Download the latest (Release v1.3.4-b) [*Ubee Android SDK*] [library_project]
 
-####Dependencies
-- [Android Support Library v4:] [android_support_library]  [**download here**] [v4_download_link]
+#### Dependencies 
+- Android Support Library v4 *(Already included on the Ubee Android SDK)*
+- Google Protocol Buffers v2.5.0 *(Already included on the Ubee Android SDK)*
+- Google Play Services SDK (Download [**here**] [google_play_services_doc_install]).
 
-#### Add the jar file:
- - Create a folder called "libs" in your Android project.
- - Move the jar to the libs folder.
+3. Integrating SDK
+---
+### Eclipse:
+1. Select **File > Import**.
+2. Select **Existing Android Code Into Workspace** and click **Next**.
+3. Browse to the *ubee-android-sdk* folder.
+4. Click Finish to import the project. You should now see a new project titled *ubee-android-sdk*.
 
-##Android Manifest.xml
-Write the lines below in your AndroidManifest.xml file 
+You now have a library project for the Ubee SDK that you can use with one or more application projects.
+
+Add the library to your application project:
+
+1. In the Project Explorer, right-click your project and select **Properties**.
+2. In the category panel on the left side of the dialog, select **Android**.
+3. In the Library pane, click the **Add** button.
+4. Select the *ubee-android-sdk* library project and click **OK**.
+5. In the properties window, click **OK**.
+
+> We use the Android Support Library v4, so if you use it in your project, it may cause conflict. You can just remove the one from your project, which is on your folder libs/android-support-v4.jar
+
+### AndroidManifest.xml
+Add the following permissions to your manifest file:
+```xml
+<manifest>
+    <!-- These permissions are mandatory to run Ubee SDK -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- This permissions is optional. It allow the SDK to write it's temporary data on the external storage instead of the application internal memory. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</manifest>
+```
+Adding the following Service to your manifest file:
+```xml
+<application> 
+     <service android:name="in.ubee.api.location.LocationService" 
+        android:exported="false"/>
+</application>
+```
+
+4. Integrating Google Play Services SDK
+---
+Add the Google Play Services SDK to your application project.
 
 ```xml
 <application> 
-[...]
-<service android:name="in.ubee.api.location.LocationService" android:exported="false"/>
-</aplication>
-```
-###Required Permissions
-
-```xml
-<manifest>
-[...]
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-</manifest>
+    [...]
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+</application>
 ```
 
-###Additional Permissions
-To allow the application to write it's temporary data on the external storage instead of the application internal memory
-```xml
-<manifest>
-[...]
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-</manifest>
-```
+> If you need some help, see the official [**documentation**] [google_play_services_doc] to integrate the Google Play Services SDK.
 
-##Initializating
+5. Initializating SDK
+---
+
 You will need to use your application id (app_id) and secret (app_secret) that you received when you created your application [**here**] [create_app].
-Just add the lines below in your **Application** onCreate method.
-**Warning** Do not put it in your activity for the current version.
+Just add the lines below in your first Activity onCreate method.
 ```java
-Ubee.setLogsVisible(true);
-Ubee.init(this.getApplicationContext());
-String appId = "your_app_id";
-String appSecret = "your_app_secret";
-Ubee.setMapsApp(appId, appSecret);
-Ubee.setCacheSizeLimit(10485760L); //10MB
+UbeeOptions options = UbeeOptions.getInstance(this);
+options.setMapsKey(<Your_Maps_Key>,<Your_Maps_Secret>);
+options.setLogEnabled(true);
+Ubee.init(this, options);
 ```
 ----------------------
 Usage Indoor Location
@@ -157,7 +182,7 @@ public boolean hasPreviousFloor();
 ```
 ###Loading the user position
 ```java 
-public void setLocationPoint(Location newLocationPoint);
+public void setUserLocation(Location newLocationPoint);
 ```
 
 ####Usage
@@ -175,7 +200,7 @@ OnMapsLocationListener mLocationListener =  new OnMapsLocationListener() {
 
     @Override
     public void onLocationChanged(Location location) {
-	    mIndoorMapView.setLocationPoint(location);	
+	    mIndoorMapView.setUserLocation(location);
     }
 
 	@Override
@@ -188,17 +213,13 @@ Ubee.unregisterLocationCallback(context, mLocationListener);
 
 ```
 ---
-###Disable Logs
-```java
-Ubee.setLogsVisible(false);
-```
 
   [android_support_library]: http://developer.android.com/tools/support-library/setup.html
   [v4_download_link]: https://s3.amazonaws.com/mobile-api/android-support-v4.jar
-  [thin_jar]: https://s3.amazonaws.com/mobile-api/0.2/Maps/ubee-api-0.2.jar
+  [library_project]: https://github.com/ubee/ubee-android-sdk/archive/release/1.3.4-b.zip
   [maps_demo_project]: https://github.com/ubee/ubee-maps-example
   [create_app]: http://maps.ubee.in/oauth/applications/new
   [javadocs]: http://ubee.github.io/ubee-maps-example
-
-
+  [google_play_services_doc_install]: http://developer.android.com/google/play-services/setup.html#Install
+  [google_play_services_doc]: http://developer.android.com/google/play-services/setup.html
 
