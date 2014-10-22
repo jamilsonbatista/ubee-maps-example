@@ -8,7 +8,7 @@ Create your application [**here**] [create_app] (You will need to have an accoun
 
 2. Download SDK and Dependencies
 ---
-Download the latest (Release v1.3.4-b) [*Ubee Android SDK*] [library_project]
+Download the latest [*InLocoMedia Android SDK*] [library_project]
 
 #### Dependencies 
 - Android Support Library v4 *(Already included on the Ubee Android SDK)*
@@ -20,8 +20,8 @@ Download the latest (Release v1.3.4-b) [*Ubee Android SDK*] [library_project]
 ### Eclipse:
 1. Select **File > Import**.
 2. Select **Existing Android Code Into Workspace** and click **Next**.
-3. Browse to the *ubee-android-sdk* folder.
-4. Click Finish to import the project. You should now see a new project titled *ubee-android-sdk*.
+3. Browse to the *inlocomedia-android-sdk* folder.
+4. Click Finish to import the project. You should now see a new project titled *inlocomedia-android-sdk*.
 
 You now have a library project for the Ubee SDK that you can use with one or more application projects.
 
@@ -30,7 +30,7 @@ Add the library to your application project:
 1. In the Project Explorer, right-click your project and select **Properties**.
 2. In the category panel on the left side of the dialog, select **Android**.
 3. In the Library pane, click the **Add** button.
-4. Select the *ubee-android-sdk* library project and click **OK**.
+4. Select the *inlocomedia-android-sdk* library project and click **OK**.
 5. In the properties window, click **OK**.
 
 > We use the Android Support Library v4, so if you use it in your project, it may cause conflict. You can just remove the one from your project, which is on your folder libs/android-support-v4.jar
@@ -216,7 +216,7 @@ Ubee.unregisterLocationCallback(context, mLocationListener);
 
   [android_support_library]: http://developer.android.com/tools/support-library/setup.html
   [v4_download_link]: https://s3.amazonaws.com/mobile-api/android-support-v4.jar
-  [library_project]: https://github.com/ubee/ubee-android-sdk/archive/release/1.3.4-b.zip
+  [library_project]: https://github.com/in-loco-media/inlocomedia-android-sdk/archive/master.zip
   [maps_demo_project]: https://github.com/ubee/ubee-maps-example
   [create_app]: http://maps.ubee.in/oauth/applications/new
   [javadocs]: http://ubee.github.io/ubee-maps-example
