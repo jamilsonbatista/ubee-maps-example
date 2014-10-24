@@ -90,7 +90,7 @@ Usage Indoor Location
 - Register/Unregister a context to receive the device current indoor location
 
 ```java
-private OnMapsLocationListener mLocationListener = new OnMapsLocationListener() {
+private OnLocationListener mLocationListener = new OnLocationListener() {
     
 	@Override
 	public void onLocationChanged(Location location) {
